@@ -5,7 +5,7 @@ import os
 import argparse
 
 parser = argparse.ArgumentParser("Extract Lire color descriptors from csv file(s) with RGB pixels")
-parser.add_argument('-i', '--input',  nargs='+', help="input csv file(s)")
+parser.add_argument('-i', '--input', required=True, nargs='+', help="input csv file(s)")
 parser.add_argument('-o', '--output', nargs='?',
                     help="output file name. Input file name with '.LireColorDescriptors.csv' extension by default")
 

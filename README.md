@@ -3,7 +3,7 @@ Extract Lire color descriptors from csv file(s) with RGB pixels.
 
 #### Usage: 
 ```
-example.py [-h] [-i INPUT [INPUT ...]] [-o [OUTPUT]]
+       [-h] -i INPUT [INPUT ...] [-o [OUTPUT]]
 
 optional arguments:
   -h, --help            show this help message and exit
