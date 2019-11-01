@@ -47,13 +47,13 @@ class GlobalFeatures():
                 key = m.group(1)
                 st = 1
 
-        im = cv2.imread(self.img)
-        im = im.reshape(im.shape[0] * im.shape[1], 3)
-        im = im[~np.all(im < 20, axis=1)]  # remove zero lines 2-D numpy array
-        im = pd.DataFrame(im)
-        self.out['GCH2'] = GlobalFeatures.GCH(im, 2).tolist()
-        self.out['GCH3'] = GlobalFeatures.GCH(im, 3).tolist()
-        self.out['GCH4'] = GlobalFeatures.GCH(im, 4).tolist()
-        self.out['Mean'] = GlobalFeatures.tipical_mean(im, 2).tolist()
+        #im = cv2.imread(self.img)
+        #im = im.reshape(im.shape[0] * im.shape[1], 3)
+        #im = im[~np.all(im < 20, axis=1)]  # remove zero lines 2-D numpy array
+        #im = pd.DataFrame(im)
+        #self.out['GCH2'] = GlobalFeatures.GCH(im, 2).tolist()
+        #self.out['GCH3'] = GlobalFeatures.GCH(im, 3).tolist()
+        #self.out['GCH4'] = GlobalFeatures.GCH(im, 4).tolist()
+        #self.out['Mean'] = GlobalFeatures.tipical_mean(im, 2).tolist()
 
         return self.out
