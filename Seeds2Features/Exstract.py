@@ -163,8 +163,8 @@ class Tsv2Df():
 
         # print(data)
         # exit(0)
-        #dirpath = tempfile.mkdtemp()
-        dirpath = "./tmp1"
+        dirpath = tempfile.mkdtemp()
+        #dirpath = "./tmp1"
         names = []
         for i in range(len(data)):
             name = '{}/{}_{}.bmp'.format(dirpath, data.Class[i], data.Seed[i])
@@ -175,7 +175,7 @@ class Tsv2Df():
         for name in names:
             gfs.append(GlobalFeatures(name).extract())
         df_gf = pd.DataFrame(gfs)
-        #shutil.rmtree(dirpath)
+        shutil.rmtree(dirpath)
 
         df_gf = pd.concat([df_gf[column].apply(pd.Series).add_prefix(column) for column in df_gf.columns], axis=1)
         df_gf = pd.concat([data[['Class', 'Seed']], df_gf], axis=1)
