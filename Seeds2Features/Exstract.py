@@ -57,7 +57,13 @@ class Tsv2Df():
         contours, cont = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_TC89_L1)
         cv2.drawContours(gray, contours, -1, (255, 0, 0), 1)
         # Get all the points of the contour
-        contour = contours[0].reshape(len(contours[0]), 2)
+        contour_index = 0
+        area = 0
+        for i in range(len(contours)):
+            if cv2.contourArea(contours[i]) > area:
+                area = cv2.contourArea(contours[i])
+                contour_index = i
+        contour = contours[contour_index].reshape(len(contours[contour_index]), 2)
         # we assume a rectangle with at least two points on the contour gives a 'good enough' result
         # get all possible rectangles based on this hypothesis
         rect = []
@@ -107,18 +113,27 @@ class Tsv2Df():
                     best_rect_found = True
 
                 index_rect += 1
+
         if best_rect_found:
             # Finally, we crop the picture and store it
             img = img[min(y1, y2):max(y1, y2), min(x1, x2):max(x1, x2)]
-
-        img = cv2.resize(img, (30, 30), interpolation=cv2.INTER_AREA)
+        # if not np.all(np.array(img.shape)):
+        #     #cv2.imshow("Is that rectangle ok?", gray)
+        #     #cv2.waitKey(0)
+        #     cv2.imshow("Is that rectangle ok?", gray)
+        #     cv2.waitKey(0)
+        #     print(img.shape)
+        try:
+            img = cv2.resize(img, (30, 30), interpolation=cv2.INTER_AREA)
+        except cv2.error as e:
+            print("ERROR", e)
+            img = np.zeros((30, 30, 3), np.uint8)
         return img
 
     def extract(self):
         df = pd.read_csv(self.tsv, sep="\t", names=['Class', 'Seed', 'R', 'G', 'B', 'X', 'Y', 'Cluster_x', 'Cluster_y'],
                          header=0)
         data = df.groupby(['Class', 'Seed']).apply(Tsv2Df.df2img).reset_index()
-        data_len = len(data) - 1
         for i in range(len(data)):
             img = data.iloc[i, 2]
             seed = str(data.iloc[i, 1])
@@ -148,8 +163,8 @@ class Tsv2Df():
 
         # print(data)
         # exit(0)
-        dirpath = tempfile.mkdtemp()
-        #dirpath = "./tmp"
+        #dirpath = tempfile.mkdtemp()
+        dirpath = "./tmp1"
         names = []
         for i in range(len(data)):
             name = '{}/{}_{}.bmp'.format(dirpath, data.Class[i], data.Seed[i])
@@ -160,7 +175,7 @@ class Tsv2Df():
         for name in names:
             gfs.append(GlobalFeatures(name).extract())
         df_gf = pd.DataFrame(gfs)
-        shutil.rmtree(dirpath)
+        #shutil.rmtree(dirpath)
 
         df_gf = pd.concat([df_gf[column].apply(pd.Series).add_prefix(column) for column in df_gf.columns], axis=1)
         df_gf = pd.concat([data[['Class', 'Seed']], df_gf], axis=1)
