@@ -35,11 +35,14 @@ class GlobalFeatures():
         args = ["java", "-jar", self.jar, self.img]
         print(args)
         process = subprocess.Popen(args, stdout=subprocess.PIPE)
-        data = process.communicate()
+        data, error = process.communicate()
+        if process.returncode != 0:
+            print("ERROR can't extract for {}: {}".format(self.img, error))
+            return None
         st = 0
         key = ""
-        for line in data[0].decode("utf-8").splitlines():
-            if (st == 1):
+        for line in data.decode("utf-8").splitlines():
+            if st == 1:
                 self.out[key] = ast.literal_eval(line)
                 st = 0
             m = re.search('(\w+):', line)

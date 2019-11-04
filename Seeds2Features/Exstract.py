@@ -167,13 +167,15 @@ class Tsv2Df():
         #dirpath = "./tmp1"
         names = []
         for i in range(len(data)):
-            name = '{}/{}_{}.bmp'.format(dirpath, data.Class[i], data.Seed[i])
+            name = '{}/{}_{}.jpg'.format(dirpath, data.Class[i], data.Seed[i])
             names.append(name)
             plt.imsave(name, data.iloc[i, 2])
 
         gfs = []
         for name in names:
-            gfs.append(GlobalFeatures(name).extract())
+            features = GlobalFeatures(name).extract()
+            if features is not None:
+                gfs.append(features)
         df_gf = pd.DataFrame(gfs)
         shutil.rmtree(dirpath)
 
