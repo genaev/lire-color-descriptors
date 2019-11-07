@@ -132,7 +132,7 @@ class Tsv2Df():
 
     def extract(self):
         df = pd.read_csv(self.tsv, sep="\t", names=['Class', 'Seed', 'R', 'G', 'B', 'X', 'Y', 'Cluster_x', 'Cluster_y'],
-                         header=0)
+                         header=0, comment='#')
         data = df.groupby(['Class', 'Seed']).apply(Tsv2Df.df2img).reset_index()
         for i in range(len(data)):
             img = data.iloc[i, 2]

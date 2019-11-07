@@ -23,6 +23,6 @@ if output_file is None:
 result = pd.DataFrame()
 print(input_files, output_file)
 for input_file in input_files:
-    df = RenameClasses(input_file, Tsv2Df(input_file).extract()).rename()
+    df = RenameClasses(input_file, Tsv2Df(input_file).extract()).rename_from_dict()
     result = pd.concat([result, df])
 result.to_csv(output_file)
